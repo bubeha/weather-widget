@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Card from './Card';
 import config from './config.json';
 
 class Weather {
@@ -61,36 +62,12 @@ class Weather {
 
         axios.get(config.currentWeatherUrl + inputValue + config.apiData)
             .then((response) => {
-                this.createCard(
-                    `<header class="card-header">` +
-                    `<h4 class="card-title">Текущая погода: </h4>` +
-                    `${response.data.weather[0].description}` +
-                    `</header>` +
-                    `<ul class="list-group list-group-flush">` +
-                    `<li class="list-group-item"><i class="fa fa-thermometer-full"></i>Температура: ${Weather.convert(response.data.main.temp)}</li>` +
-                    `<li class="list-group-item">Давление:  ${response.data.main.pressure}</li>` +
-                    `<li class="list-group-item">Влажность: ${response.data.main.humidity}</li>` +
-                    `</ul>`
-                );
+                this.resultContainer.appendChild(new Card(response.data).render());
 
                 axios.get(config.forecast + inputValue + config.apiData)
                     .then((response) => {
-
                         response.data.list.forEach((item, i, arr) => {
-
-                            this.createCard(
-                                `<header class="card-header">` +
-                                `<h6 class="card-title"><i class="fa fa-calendar"></i> Погода на:</h6><p>${item.dt_txt}</p>` +
-                                `<p>${item.weather[0].description}</p>` +
-                                `</header>` +
-                                `<ul class="list-group list-group-flush">` +
-                                `<li class="list-group-item"><i class="fa fa-thermometer-full"></i>Температура: ${Weather.convert(item.main.temp)}</li>` +
-                                `<li class="list-group-item"><i class="fa fa-thermometer-full"></i>Мин. температура: ${Weather.convert(item.main.temp_min)}</li>` +
-                                `<li class="list-group-item"><i class="fa fa-thermometer-full"></i>Мак. температура: ${Weather.convert(item.main.temp_max)}</li>` +
-                                `<li class="list-group-item">Давление:  ${item.main.pressure}</li>` +
-                                `<li class="list-group-item">Влажность: ${item.main.humidity}</li>` +
-                                `</ul>`
-                            );
+                            this.resultContainer.append(new Card(item).render());
                         })
                     })
                     .catch((error) => {
@@ -102,18 +79,6 @@ class Weather {
                 console.log(`Error: ${error}`);
             });
         return false;
-    }
-
-    static convert(value) {
-        return parseInt(value - 274.15);
-    }
-
-    createCard(data) {
-        const cart = document.createElement('div');
-        cart.className = 'col-sm-3';
-        cart.innerHTML = `<div class="card">${data}</div>`;
-
-        this.resultContainer.appendChild(cart);
     }
 
     render() {

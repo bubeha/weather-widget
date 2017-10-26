@@ -1,0 +1,5 @@
+{
+  "currentWeatherUrl": "https://api.openweathermap.org/data/2.5/weather?q=",
+  "forecast": "https://api.openweathermap.org/data/2.5/forecast?cnt=9&q=",
+  "apiData": "&appid=e269be064f0c576318ec9f1c9bbf6e21&lang=ru"
+}
